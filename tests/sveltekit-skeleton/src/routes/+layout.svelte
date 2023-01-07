@@ -14,9 +14,26 @@
 				<strong class="text-xl uppercase">Skeleton</strong>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
-				<a class="btn btn-sm btn-ghost-surface" href="https://discord.gg/EXqV7W8MtY" target="_blank" rel="noreferrer">Discord</a>
-				<a class="btn btn-sm btn-ghost-surface" href="https://twitter.com/SkeletonUI" target="_blank" rel="noreferrer">Twitter</a>
-				<a class="btn btn-sm btn-ghost-surface" href="https://github.com/skeletonlabs/skeleton" target="_blank" rel="noreferrer">GitHub</a>
+				<nav class="hidden md:block">
+					<a
+						class="btn btn-sm btn-ghost-surface"
+						href="https://discord.gg/EXqV7W8MtY"
+						target="_blank"
+						rel="noreferrer">Discord</a
+					>
+					<a
+						class="btn btn-sm btn-ghost-surface"
+						href="https://twitter.com/SkeletonUI"
+						target="_blank"
+						rel="noreferrer">Twitter</a
+					>
+					<a
+						class="btn btn-sm btn-ghost-surface"
+						href="https://github.com/skeletonlabs/skeleton"
+						target="_blank"
+						rel="noreferrer">GitHub</a
+					>
+				</nav>
 			</svelte:fragment>
 		</AppBar>
 	</svelte:fragment>
