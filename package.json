@@ -1,0 +1,34 @@
+{
+	"name": "rollup-plugin-purgecss-sveltekit",
+	"version": "0.0.1",
+	"description": "Purges css from svelte components",
+	"module": "./dist/index.mjs",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.js"
+		}
+	},
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"build": "tsup"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "MIT",
+	"dependencies": {
+		"purgecss": "^5.0.0",
+		"svelte-preprocess": "^5.0.0",
+		"typescript": "^4.9.4"
+	},
+	"devDependencies": {
+		"@types/node": "^18.11.18",
+		"prettier": "^2.8.1",
+		"prettier-plugin-svelte": "^2.9.0",
+		"rollup": "^3.9.1",
+		"svelte": "^3.55.0",
+		"tsup": "^6.5.0"
+	}
+}
