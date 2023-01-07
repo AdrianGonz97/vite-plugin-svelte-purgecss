@@ -1,7 +1,7 @@
 {
 	"name": "rollup-plugin-purgecss-sveltekit",
 	"version": "0.0.1",
-	"description": "Purges css from svelte components",
+	"description": "PurgeCSS for SvelteKit",
 	"module": "./dist/index.mjs",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
@@ -16,7 +16,7 @@
 		"build": "tsup"
 	},
 	"keywords": [],
-	"author": "",
+	"author": "AdrianGonz97",
 	"license": "MIT",
 	"dependencies": {
 		"purgecss": "^5.0.0",
