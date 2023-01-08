@@ -1,6 +1,6 @@
 {
 	"name": "rollup-plugin-purgecss-sveltekit",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"description": "PurgeCSS for SvelteKit",
 	"module": "./dist/index.mjs",
 	"main": "./dist/index.js",
