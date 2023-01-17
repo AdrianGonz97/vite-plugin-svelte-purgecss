@@ -5,6 +5,10 @@
 	"module": "dist/index.mjs",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
+	"repository": {
+		"url": "https://github.com/AdrianGonz97/rollup-plugin-purgecss-sveltekit",
+		"type": "git"
+	},
 	"exports": {
 		".": {
 			"import": "./dist/index.mjs",
