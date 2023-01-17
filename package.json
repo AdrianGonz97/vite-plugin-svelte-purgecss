@@ -21,7 +21,14 @@
 		"lint": "tsc",
 		"release": "pnpm run build && changeset publish"
 	},
-	"keywords": [],
+	"keywords": [
+		"purgeCSS",
+		"sveltekit",
+		"svelte",
+		"rollup",
+		"tailwind",
+		"vite"
+	],
 	"author": "AdrianGonz97",
 	"license": "MIT",
 	"dependencies": {
