@@ -3,7 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/rollup-plugin-purgecss-sveltekit?logo=npm&color=cb3837)](https://www.npmjs.com/package/rollup-plugin-purgecss-sveltekit)
 [![license](https://img.shields.io/badge/license-MIT-%23bada55)](https://github.com/AdrianGonz97/rollup-plugin-purgecss-sveltekit/blob/main/LICENSE)
 
-A simple rollup plugin that **throughly** purges excess CSS from [Svelte](https://svelte.dev/) projects using [PurgeCSS](https://purgecss.com/). Excellent when combining [Tailwind](https://tailwindcss.com/) with a Tailwind specific UI library such as [Skeleton](https://skeleton.dev).
+A simple rollup plugin that **thoroughly** purges excess CSS from [Svelte](https://svelte.dev/) projects using [PurgeCSS](https://purgecss.com/). Excellent when combining [Tailwind](https://tailwindcss.com/) with a Tailwind specific UI library such as [Skeleton](https://skeleton.dev).
 
 ## Motivation
 
