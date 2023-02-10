@@ -1,5 +1,5 @@
 {
-	"name": "sveltekit-skeleton",
+	"name": "sveltekit-skeleton-barebones",
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
@@ -15,9 +15,6 @@
 		"@skeletonlabs/skeleton": "^0.124.2",
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.5.0",
-		"@tailwindcss/forms": "^0.5.3",
-		"@tailwindcss/line-clamp": "^0.4.2",
-		"@tailwindcss/typography": "^0.5.9",
 		"autoprefixer": "^10.4.13",
 		"postcss": "^8.4.21",
 		"prettier": "^2.8.0",

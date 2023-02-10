@@ -5,5 +5,5 @@ module.exports = {
 	theme: {
 		extend: {},
 	},
-	plugins: [require('@tailwindcss/forms'),require('@tailwindcss/typography'),require('@tailwindcss/line-clamp'),...require('@skeletonlabs/skeleton/tailwind/skeleton.cjs')()],
+	plugins: [...require('@skeletonlabs/skeleton/tailwind/skeleton.cjs')()],
 }
