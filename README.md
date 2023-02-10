@@ -3,13 +3,13 @@
 [![npm version](https://img.shields.io/npm/v/rollup-plugin-purgecss-sveltekit?logo=npm&color=cb3837)](https://www.npmjs.com/package/rollup-plugin-purgecss-sveltekit)
 [![license](https://img.shields.io/badge/license-MIT-%23bada55)](https://github.com/AdrianGonz97/rollup-plugin-purgecss-sveltekit/blob/main/LICENSE)
 
-A simple rollup plugin that **throughly** purges excess CSS from [Svelte](https://svelte.dev/) projects using [PurgeCSS](https://purgecss.com/). Excellent when combining [Tailwind](https://tailwindcss.com/) with a Tailwind specific UI library such as [Skeleton](https://skeleton.dev).
+A simple rollup plugin that **thoroughly** purges excess CSS from [Svelte](https://svelte.dev/) projects using [PurgeCSS](https://purgecss.com/). Excellent when combining [Tailwind](https://tailwindcss.com/) with a Tailwind specific UI library such as [Skeleton](https://skeleton.dev).
 
 ## Motivation
 
-PurgeCSS is a great package that does its job very well. Their provided plugins for extraction do a decent job for simple projects. However, plugins such as [postcss-purgecss](https://github.com/FullHuman/purgecss/tree/main/packages/postcss-purgecss) and [rollup-plugin-purgecss](https://github.com/FullHuman/purgecss/tree/main/packages/rollup-plugin-purgecss) do their jobs rather naively. They only analyze the content that is passed to them through their `content` fields, which means that if you pass a UI library to it, none of the selectors that are **unused** in your project (such as components that aren't imported) will be properly purged. Leaving you with a larger than necessary CSS bundle.
+PurgeCSS is an excellent package that removes unused CSS. Their provided plugins for extraction do a decent enough job for simple projects. However, plugins such as [postcss-purgecss](https://github.com/FullHuman/purgecss/tree/main/packages/postcss-purgecss) and [rollup-plugin-purgecss](https://github.com/FullHuman/purgecss/tree/main/packages/rollup-plugin-purgecss) take a rather naive approach to selector extraction. They only analyze the content that is passed to them through their `content` fields, which means that if you pass a UI library to it, none of the selectors that are **unused** in your project (such as components that aren't imported) will be properly purged. Leaving you with a larger than necessary CSS bundle.
 
-Ideally, we'd like to only keep the selectors that are used in your project, and only the ones that are imported from a library. We accomplish this by walking Svelte's AST, extracting out any of the possible selectors (thanks to code lifted from [carbon-preprocess-svelte's](https://github.com/carbon-design-system/carbon-preprocess-svelte) `optimizeCss()` plugin), followed by the extraction of potential selectors from the emitted JS chunks from rollup. From there, we can pass along the selectors to PurgeCSS for the final extraction.
+Ideally, we'd like to only keep the selectors that are used in your project, and only the ones that are imported from a library. We accomplish this by walking Svelte's AST, extracting out any of the possible selectors (thanks to code lifted from [carbon-preprocess-svelte's](https://github.com/carbon-design-system/carbon-preprocess-svelte) `optimizeCss()` plugin), followed by the extraction of potential selectors from the emitted JS chunks from rollup. From there, we can pass along the selectors to PurgeCSS for final processing.
 
 ## Usage
 
@@ -52,6 +52,7 @@ const config: UserConfig = {
 	],
 };
 ```
+For further configuration, you can learn more about safelisting [here](https://purgecss.com/configuration.html).
 
 ## Credits
 
