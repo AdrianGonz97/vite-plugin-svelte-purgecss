@@ -1,12 +1,12 @@
 {
-	"name": "rollup-plugin-purgecss-sveltekit",
-	"version": "0.0.5",
-	"description": "PurgeCSS for SvelteKit",
+	"name": "vite-plugin-svelte-purgecss",
+	"version": "0.0.1",
+	"description": "Vite plugin for PurgeCSS for Svelte",
 	"module": "dist/index.mjs",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"repository": {
-		"url": "https://github.com/AdrianGonz97/rollup-plugin-purgecss-sveltekit",
+		"url": "https://github.com/AdrianGonz97/vite-plugin-svelte-purgecss",
 		"type": "git"
 	},
 	"exports": {
@@ -27,7 +27,8 @@
 		"svelte",
 		"rollup",
 		"tailwind",
-		"vite"
+		"vite",
+		"skeleton"
 	],
 	"author": "AdrianGonz97",
 	"license": "MIT",
@@ -40,12 +41,15 @@
 		"@types/node": "^18.11.18",
 		"prettier": "^2.8.1",
 		"prettier-plugin-svelte": "^2.9.0",
-		"rollup": "^3.9.1",
 		"svelte": "^3.55.0",
 		"tsup": "^6.5.0",
-		"typescript": "^4.9.4"
+		"typescript": "^4.9.4",
+		"vite": "^4.1.1"
 	},
 	"files": [
 		"dist"
-	]
+	],
+	"peerDependencies": {
+		"vite": "^4.1.1"
+	}
 }

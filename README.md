@@ -1,4 +1,4 @@
-# rollup-plugin-purgecss-sveltekit
+# vite-plugin-svelte-purgecss
 
 [![npm version](https://img.shields.io/npm/v/rollup-plugin-purgecss-sveltekit?logo=npm&color=cb3837)](https://www.npmjs.com/package/rollup-plugin-purgecss-sveltekit)
 [![license](https://img.shields.io/badge/license-MIT-%23bada55)](https://github.com/AdrianGonz97/rollup-plugin-purgecss-sveltekit/blob/main/LICENSE)
@@ -16,20 +16,17 @@ Ideally, we'd like to only keep the selectors that are used in your project, and
 ### Installation
 
 ```bash
-npm i -D rollup-plugin-purgecss-sveltekit
+npm i -D vite-plugin-svelte-purgecss
 ```
 
 ### Add to Vite
 
 ```ts
 // vite.config.ts
-import { purgeCss } from "rollup-plugin-purgecss-sveltekit";
+import { purgeCss } from "vite-plugin-svelte-purgecss";
 
 const config: UserConfig = {
-	plugins: [
-		sveltekit(),
-		process.env.NODE_ENV === "production" && purgeCss(), // we only want it to run in production
-	],
+	plugins: [sveltekit(), purgeCss()],
 };
 ```
 
@@ -42,16 +39,16 @@ import { purgeCss } from "rollup-plugin-purgecss-sveltekit";
 const config: UserConfig = {
 	plugins: [
 		sveltekit(),
-		process.env.NODE_ENV === "production" &&
-			purgeCss({
-				safelist: {
-					// any selectors that begin with "hljs-" will not be purged
-					greedy: [/^hljs-/],
-				},
-			}),
+		purgeCss({
+			safelist: {
+				// any selectors that begin with "hljs-" will not be purged
+				greedy: [/^hljs-/],
+			},
+		}),
 	],
 };
 ```
+
 For further configuration, you can learn more about safelisting [here](https://purgecss.com/configuration.html).
 
 ## Credits

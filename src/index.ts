@@ -1,4 +1,4 @@
-import type Rollup from "rollup";
+import { Plugin, ResolvedConfig } from "vite";
 import sveltePreprocess from "svelte-preprocess";
 import type { typescript as TS, postcss as PostCSS } from "svelte-preprocess";
 import { preprocess } from "svelte/compiler";
@@ -9,12 +9,6 @@ import { promisify } from "util";
 import { readFile } from "fs";
 import { extractFromJS } from "./extract-js";
 
-// @ts-expect-error @ts-ignore
-const { typescript, postcss } = sveltePreprocess as {
-	typescript: typeof TS;
-	postcss: typeof PostCSS;
-};
-
 type PurgeOptions = {
 	safelist: {
 		standard?: Array<RegExp | string>;
@@ -23,7 +17,15 @@ type PurgeOptions = {
 	};
 };
 
-export function purgeCss(options?: PurgeOptions): Rollup.Plugin {
+export function purgeCss(options?: PurgeOptions): Plugin {
+	let viteConfig: ResolvedConfig;
+
+	// @ts-expect-error extract the preprocessors for ts and postcss
+	const { typescript, postcss } = sveltePreprocess as {
+		typescript: typeof TS;
+		postcss: typeof PostCSS;
+	};
+
 	const selectors = new Set<string>();
 	const standard = [
 		"*",
@@ -37,18 +39,18 @@ export function purgeCss(options?: PurgeOptions): Rollup.Plugin {
 	const greedy = options?.safelist?.greedy ?? [];
 
 	return {
-		name: "rollup-plugin-purgecss-sveltekit",
+		name: "vite-plugin-svelte-purgecss",
+		apply: "build",
+		configResolved(config) {
+			viteConfig = config;
+		},
 		async transform(code, id) {
 			if (EXT_SVELTE.test(id)) {
 				const readFiles = promisify(readFile);
 				const source = await readFiles(id, "utf-8");
-				const result = await preprocess(
-					source,
-					[typescript(), postcss()],
-					{
-						filename: id,
-					}
-				);
+				const result = await preprocess(source, [typescript(), postcss()], {
+					filename: id,
+				});
 				extractSelectors(result.code, id).forEach((selector) =>
 					selectors.add(selector)
 				);
@@ -56,7 +58,7 @@ export function purgeCss(options?: PurgeOptions): Rollup.Plugin {
 			}
 		},
 		async generateBundle(options, bundle) {
-			const cssBundles: Rollup.OutputBundle = {};
+			const cssBundles: typeof bundle = {};
 			for (const fileName in bundle) {
 				const chunkOrAsset = bundle[fileName];
 				if (chunkOrAsset.type === "chunk" && EXT_JS.test(fileName)) {
@@ -74,9 +76,7 @@ export function purgeCss(options?: PurgeOptions): Rollup.Plugin {
 				);
 
 				if (chunkOrAsset.type === "asset" && EXT_CSS.test(fileName)) {
-					const content = selectorsArr.map(
-						(selector) => selector + "{}"
-					);
+					const content = selectorsArr.map((selector) => selector + "{}");
 
 					const newAmount = selectorsArr
 						.filter(
@@ -116,3 +116,5 @@ export function purgeCss(options?: PurgeOptions): Rollup.Plugin {
 		},
 	};
 }
+
+export default purgeCss;
