@@ -17,6 +17,7 @@
 	},
 	"scripts": {
 		"test": "echo \"No tests yet\"",
+		"dev": "tsup --watch",
 		"build": "tsup",
 		"lint": "tsc",
 		"release": "pnpm run build && changeset publish"

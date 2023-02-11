@@ -1,13 +1,13 @@
-import { Plugin, ResolvedConfig } from "vite";
+import { ResolvedConfig, Plugin } from "vite";
 import sveltePreprocess from "svelte-preprocess";
 import type { typescript as TS, postcss as PostCSS } from "svelte-preprocess";
 import { preprocess } from "svelte/compiler";
 import { extractSelectors } from "./extract-selectors";
 import { PurgeCSS } from "purgecss";
 import { EXT_SVELTE, EXT_CSS, EXT_JS } from "./constants";
-import { promisify } from "util";
-import { readFile } from "fs";
+import { readFile } from "fs/promises";
 import { extractFromJS } from "./extract-js";
+import { join } from "path";
 
 type PurgeOptions = {
 	safelist: {
@@ -41,13 +41,16 @@ export function purgeCss(options?: PurgeOptions): Plugin {
 	return {
 		name: "vite-plugin-svelte-purgecss",
 		apply: "build",
-		configResolved(config) {
+		async configResolved(config) {
 			viteConfig = config;
+			const path = join(config.root, "src", "app.html");
+			const source = await readFile(path, "utf-8");
+			const classes = extractFromJS(source);
+			classes.forEach((selector) => selectors.add(selector));
 		},
-		async transform(code, id) {
+		async transform(code, id, options) {
 			if (EXT_SVELTE.test(id)) {
-				const readFiles = promisify(readFile);
-				const source = await readFiles(id, "utf-8");
+				const source = await readFile(id, "utf-8");
 				const result = await preprocess(source, [typescript(), postcss()], {
 					filename: id,
 				});
