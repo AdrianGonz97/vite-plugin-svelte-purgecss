@@ -2,12 +2,17 @@ import { ResolvedConfig, Plugin } from "vite";
 import sveltePreprocess from "svelte-preprocess";
 import type { typescript as TS, postcss as PostCSS } from "svelte-preprocess";
 import { preprocess } from "svelte/compiler";
-import { extractSelectors } from "./extract-selectors";
+import {
+	extractSelectorsFromSvelte,
+	extractSelectorsWithRegex,
+} from "./extract-selectors";
 import { PurgeCSS } from "purgecss";
-import { EXT_SVELTE, EXT_CSS, EXT_JS } from "./constants";
 import { readFile } from "fs/promises";
-import { extractFromJS } from "./extract-js";
 import { join } from "path";
+
+const EXT_SVELTE = /\.(svelte)$/;
+const EXT_CSS = /\.(css)$/;
+const EXT_JS = /\.(js)$/;
 
 type PurgeOptions = {
 	safelist: {
@@ -45,7 +50,7 @@ export function purgeCss(options?: PurgeOptions): Plugin {
 			viteConfig = config;
 			const path = join(config.root, "src", "app.html");
 			const source = await readFile(path, "utf-8");
-			const classes = extractFromJS(source);
+			const classes = extractSelectorsWithRegex(source);
 			classes.forEach((selector) => selectors.add(selector));
 		},
 		async transform(code, id, options) {
@@ -54,7 +59,7 @@ export function purgeCss(options?: PurgeOptions): Plugin {
 				const result = await preprocess(source, [typescript(), postcss()], {
 					filename: id,
 				});
-				extractSelectors(result.code, id).forEach((selector) =>
+				extractSelectorsFromSvelte(result.code, id).forEach((selector) =>
 					selectors.add(selector)
 				);
 				return { code, map: null };
@@ -65,7 +70,7 @@ export function purgeCss(options?: PurgeOptions): Plugin {
 			for (const fileName in bundle) {
 				const chunkOrAsset = bundle[fileName];
 				if (chunkOrAsset.type === "chunk" && EXT_JS.test(fileName)) {
-					const classes = extractFromJS(chunkOrAsset.code);
+					const classes = extractSelectorsWithRegex(chunkOrAsset.code);
 					classes.forEach((selector) => selectors.add(selector));
 				} else {
 					cssBundles[fileName] = chunkOrAsset;

@@ -1,12 +1,8 @@
 import { parse, walk } from "svelte/compiler";
-import { CLASS_REGEX } from "./constants";
+import { Node, NodeClassAttribute, ParentNode, Selector } from "./types";
 
-function toArray(value: unknown) {
-	if (typeof value === "string") {
-		return value.split(/\s+/).map((value) => value.trim());
-	}
-	return [];
-}
+const CLASS_REGEX = /[\w\-:./![\]]+(?<!:)/g;
+const TAILWIND_REGEX = /[\w\-:./![\]]+(?<!:)/g;
 
 const CLASS_SELECTOR = [
 	"Attribute",
@@ -15,7 +11,22 @@ const CLASS_SELECTOR = [
 	"ClassSelector",
 ];
 
-export function extractSelectors(
+export function extractSelectorsWithRegex(code: string): string[] {
+	const classes = new Set<string>();
+
+	const selectors = code.match(TAILWIND_REGEX) ?? [];
+	selectors.forEach((selector) => classes.add(selector));
+
+	// adds a dot to the beginning of each class
+	return Array.from(classes).map((selector) => {
+		if (selector[0] === ".") {
+			return selector;
+		}
+		return "." + selector;
+	});
+}
+
+export function extractSelectorsFromSvelte(
 	template: string,
 	filename?: string
 ): string[] {
@@ -39,10 +50,7 @@ export function extractSelectors(
 							ids.set(id, { value: toArray(element.value) });
 						}
 
-						if (
-							element.type === "LogicalExpression" &&
-							element.right?.value
-						) {
+						if (element.type === "LogicalExpression" && element.right?.value) {
 							ids.set(id, {
 								value: toArray(element.right?.value),
 							});
@@ -113,14 +121,12 @@ export function extractSelectors(
 			if (node.type === "PseudoClassSelector" && node.name === "global") {
 				// global selector
 				// :global(div) {}
-				node.children[0]?.value
-					.split(",")
-					.forEach((selector: string) => {
-						selectors.set(selector.trim(), {
-							type: node.type,
-							name: node.name,
-						});
+				node.children[0]?.value.split(",").forEach((selector: string) => {
+					selectors.set(selector.trim(), {
+						type: node.type,
+						name: node.name,
 					});
+				});
 			}
 
 			// string literals
@@ -171,105 +177,9 @@ export function extractSelectors(
 	});
 }
 
-type SelectorMarkup = {
-	type: "Element" | "Attribute" | "Class";
-};
-
-type SelectorStyle = {
-	type: "PseudoClassSelector";
-	name: "global" | string;
-};
-
-type SelectorFromIdentifier = {
-	type: "FromIdentifier";
-};
-
-type Selector = SelectorMarkup | SelectorStyle | SelectorFromIdentifier;
-
-export type ExtractedSelectors = [string, Selector][];
-
-type NodeClassAttributeMustacheTag = {
-	type: "MustacheTag";
-	expression?: {
-		type: "Identifier";
-		name: string;
-	};
-};
-
-type NodeClassAttributeText = {
-	type: "Text";
-	data: string;
-};
-
-type NodeClassAttribute =
-	| NodeClassAttributeMustacheTag
-	| NodeClassAttributeText;
-
-type NodeIdentifierLiteral = {
-	init?: {
-		type: "Literal";
-		value: string;
-	};
-};
-
-type NodeIdentifierCallExpression = {
-	init?: {
-		type: "CallExpression";
-		callee?: {
-			object?: {
-				elements?: Array<
-					| { type: "Literal"; value: string }
-					| { type: "LogicalExpression"; right?: { value: string } }
-				>;
-			};
-		};
-	};
-};
-
-type ParentNode = NodeIdentifierLiteral | NodeIdentifierCallExpression;
-
-type NodeIdentifier = {
-	type: "Identifier";
-	name: string;
-};
-
-type NodeElement = {
-	type: "Element";
-	name: string;
-};
-
-type NodeAttribute = {
-	type: "Attribute";
-	name: string;
-	value?: NodeClassAttribute[];
-};
-
-type NodeClass = {
-	type: "Class";
-	name: string;
-};
-
-type NodePseudoClassSelector = {
-	type: "PseudoClassSelector";
-	name: "global" | string;
-	children: [child?: { value: string }];
-};
-
-type NodeLiteral = {
-	type: "Literal";
-	value: string;
-};
-
-type NodeTemplateElement = {
-	type: "TemplateElement";
-	value: { raw: string };
-};
-
-type Node =
-	| NodeIdentifier
-	| NodeElement
-	| NodeAttribute
-	| NodeClass
-	| NodePseudoClassSelector
-	| NodeLiteral
-	| NodeTemplateElement;
+function toArray(value: unknown) {
+	if (typeof value === "string") {
+		return value.split(/\s+/).map((value) => value.trim());
+	}
+	return [];
+}
