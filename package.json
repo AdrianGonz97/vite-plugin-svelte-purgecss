@@ -16,7 +16,8 @@
 		}
 	},
 	"scripts": {
-		"test": "echo \"No tests yet\"",
+		"test": "vitest",
+		"coverage": "vitest run --coverage",
 		"dev": "tsup --watch",
 		"build": "tsup",
 		"lint": "tsc",
@@ -45,7 +46,8 @@
 		"svelte": "^3.55.0",
 		"tsup": "^6.5.0",
 		"typescript": "^4.9.4",
-		"vite": "^4.1.1"
+		"vite": "^4.1.1",
+		"vitest": "^0.28.4"
 	},
 	"files": [
 		"dist"
