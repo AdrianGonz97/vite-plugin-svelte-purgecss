@@ -11,13 +11,11 @@ import {
 	extractSelectorsFromSvelte,
 	extractSelectorsWithRegex,
 } from "./extract-selectors";
+import type { StringRegExpArray, ComplexSafelist } from "purgecss";
 
 type PurgeOptions = {
-	safelist: {
-		standard?: Array<RegExp | string>;
-		deep?: RegExp[];
-		greedy?: RegExp[];
-	};
+	safelist?: ComplexSafelist;
+	blocklist?: StringRegExpArray;
 };
 
 export function purgeCss(options?: PurgeOptions): Plugin {
@@ -40,6 +38,7 @@ export function purgeCss(options?: PurgeOptions): Plugin {
 	];
 	const deep = options?.safelist?.deep ?? [];
 	const greedy = options?.safelist?.greedy ?? [];
+	const blocklist = options?.blocklist ?? [];
 
 	return {
 		name: "vite-plugin-svelte-purgecss",
@@ -109,6 +108,7 @@ export function purgeCss(options?: PurgeOptions): Plugin {
 							deep,
 							greedy,
 						},
+						blocklist,
 					});
 
 					if (purgeCSSResult[0]) {
