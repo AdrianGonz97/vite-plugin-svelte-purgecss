@@ -35,6 +35,7 @@
 	"author": "AdrianGonz97",
 	"license": "MIT",
 	"dependencies": {
+		"htmlparser2": "^8.0.1",
 		"purgecss": "^5.0.0",
 		"svelte-preprocess": "^5.0.0"
 	},

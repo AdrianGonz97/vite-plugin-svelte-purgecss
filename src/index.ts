@@ -3,6 +3,7 @@ import sveltePreprocess from "svelte-preprocess";
 import type { typescript as TS, postcss as PostCSS } from "svelte-preprocess";
 import { preprocess } from "svelte/compiler";
 import {
+	extractSelectorsFromHtml,
 	extractSelectorsFromSvelte,
 	extractSelectorsWithRegex,
 } from "./extract-selectors";
@@ -50,7 +51,7 @@ export function purgeCss(options?: PurgeOptions): Plugin {
 			viteConfig = config;
 			const path = join(config.root, "src", "app.html");
 			const source = await readFile(path, "utf-8");
-			const classes = extractSelectorsWithRegex(source);
+			const classes = extractSelectorsFromHtml(source);
 			classes.forEach((selector) => selectors.add(selector));
 		},
 		async transform(code, id, options) {

@@ -1,8 +1,6 @@
 import { parse, walk } from "svelte/compiler";
 import { Node, NodeClassAttribute, ParentNode, Selector } from "./types";
-
-const CLASS_REGEX = /[\w\-:./![\]]+(?<!:)/g;
-const TAILWIND_REGEX = /[\w\-:./![\]]+(?<!:)/g;
+import { Parser } from "htmlparser2";
 
 const CLASS_SELECTOR = [
 	"Attribute",
@@ -11,10 +9,55 @@ const CLASS_SELECTOR = [
 	"ClassSelector",
 ];
 
+export function extractSelectorsFromHtml(code: string): string[] {
+	const selectors = new Set<string>();
+	const ids = new Set<string>();
+	const parser = new Parser({
+		onattribute: (name, value, quote) => {
+			// split on spaces for: class="h-full w-full etc..."
+			if (name === "class") {
+				value.split(" ").forEach((selector) => selectors.add(selector));
+				return;
+			}
+
+			// we'll need to prepend a #
+			if (name === "id") {
+				selectors.add(value);
+			}
+
+			// some other attribute, we'll add both the name and value
+			value
+				.split(" ")
+				.forEach(
+					(selector) =>
+						/[\w\-:./![\]]+(?<!:)/.test(selector) && selectors.add(selector)
+				);
+
+			if (/[\w\-:./![\]]+(?<!:)/.test(name)) selectors.add(name);
+		},
+	});
+	parser.write(code);
+	parser.end();
+
+	// prepends a "#" to each id selector
+	const formattedIds = Array.from(ids).map((id) => "#" + id);
+	// prepends a "." to each class selector
+	const formattedClasses = Array.from(selectors).map((selector) => {
+		if (selector[0] === ".") {
+			return selector;
+		}
+		return "." + selector;
+	});
+
+	return [...formattedIds, ...formattedClasses];
+}
+
 export function extractSelectorsWithRegex(code: string): string[] {
 	const classes = new Set<string>();
+	const TAILWIND_REGEX = /[\w\-:./![\]]+(?<!:)/g;
 
 	const selectors = code.match(TAILWIND_REGEX) ?? [];
+
 	selectors.forEach((selector) => classes.add(selector));
 
 	// adds a dot to the beginning of each class
@@ -37,6 +80,8 @@ export function extractSelectorsFromSvelte(
 
 	walk(ast, {
 		enter: (node: Node, parent: ParentNode) => {
+			const CLASS_REGEX = /[\w\-:./![\]]+(?<!:)/g;
+
 			if (node.type === "Identifier") {
 				const id = node.name;
 
