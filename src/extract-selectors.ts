@@ -16,7 +16,7 @@ export function extractSelectorsFromHtml(code: string): string[] {
 
 			// we'll need to prepend a #
 			if (name === "id") {
-				selectors.add(value);
+				ids.add(value);
 				return;
 			}
 
