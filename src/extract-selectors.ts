@@ -1,13 +1,7 @@
 import { parse, walk } from "svelte/compiler";
 import { Node, NodeClassAttribute, ParentNode, Selector } from "./types";
 import { Parser } from "htmlparser2";
-
-const CLASS_SELECTOR = [
-	"Attribute",
-	"Class",
-	"FromIdentifier",
-	"ClassSelector",
-];
+import { ATTRIBUTES, CLASS_SELECTOR } from "./constants";
 
 export function extractSelectorsFromHtml(code: string): string[] {
 	const selectors = new Set<string>();
@@ -23,7 +17,11 @@ export function extractSelectorsFromHtml(code: string): string[] {
 			// we'll need to prepend a #
 			if (name === "id") {
 				selectors.add(value);
+				return;
 			}
+
+			// if the attribute is a reserved name, ignore it
+			if (ATTRIBUTES.includes(name)) return;
 
 			// some other attribute, we'll add both the name and value
 			value
