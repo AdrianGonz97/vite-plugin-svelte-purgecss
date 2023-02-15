@@ -2,18 +2,15 @@ import { ResolvedConfig, Plugin } from "vite";
 import sveltePreprocess from "svelte-preprocess";
 import type { typescript as TS, postcss as PostCSS } from "svelte-preprocess";
 import { preprocess } from "svelte/compiler";
+import { PurgeCSS } from "purgecss";
+import { readFile } from "fs/promises";
+import { join } from "path";
+import { EXT_CSS, EXT_JS, EXT_SVELTE } from "./constants";
 import {
 	extractSelectorsFromHtml,
 	extractSelectorsFromSvelte,
 	extractSelectorsWithRegex,
 } from "./extract-selectors";
-import { PurgeCSS } from "purgecss";
-import { readFile } from "fs/promises";
-import { join } from "path";
-
-const EXT_SVELTE = /\.(svelte)$/;
-const EXT_CSS = /\.(css)$/;
-const EXT_JS = /\.(js)$/;
 
 type PurgeOptions = {
 	safelist: {
@@ -47,6 +44,7 @@ export function purgeCss(options?: PurgeOptions): Plugin {
 	return {
 		name: "vite-plugin-svelte-purgecss",
 		apply: "build",
+		enforce: "post",
 		async configResolved(config) {
 			viteConfig = config;
 			const path = join(config.root, "src", "app.html");

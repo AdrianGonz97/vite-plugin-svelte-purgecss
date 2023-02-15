@@ -30,7 +30,8 @@
 		"rollup",
 		"tailwind",
 		"vite",
-		"skeleton"
+		"skeleton",
+		"vite-plugin"
 	],
 	"author": "AdrianGonz97",
 	"license": "MIT",
