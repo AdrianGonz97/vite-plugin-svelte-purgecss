@@ -3,8 +3,12 @@ import { ATTRIBUTES } from "../constants";
 
 export function extractSelectorsFromHtml(code: string): string[] {
 	const selectors = new Set<string>();
+	const elements = new Set<string>();
 	const ids = new Set<string>();
 	const parser = new Parser({
+		onopentagname: (name) => {
+			elements.add(name);
+		},
 		onattribute: (name, value, quote) => {
 			// split on spaces for: class="h-full w-full etc..."
 			if (name === "class") {
@@ -45,5 +49,5 @@ export function extractSelectorsFromHtml(code: string): string[] {
 		return "." + selector;
 	});
 
-	return [...formattedIds, ...formattedClasses];
+	return [...formattedIds, ...formattedClasses, ...Array.from(elements)];
 }
