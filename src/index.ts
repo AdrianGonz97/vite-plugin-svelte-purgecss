@@ -8,8 +8,8 @@ import { join } from "path";
 import { EXT_CSS, EXT_JS, EXT_SVELTE } from "./constants";
 import {
 	extractSelectorsFromHtml,
+	extractSelectorsFromJS,
 	extractSelectorsFromSvelte,
-	extractSelectorsWithRegex,
 } from "./extract-selectors";
 import type { StringRegExpArray, ComplexSafelist } from "purgecss";
 
@@ -57,9 +57,8 @@ export function purgeCss(options?: PurgeOptions): Plugin {
 				const result = await preprocess(source, [typescript(), postcss()], {
 					filename: id,
 				});
-				extractSelectorsFromSvelte(result.code, id).forEach((selector) =>
-					selectors.add(selector)
-				);
+				const svelteSelectors = extractSelectorsFromSvelte(result.code, id);
+				svelteSelectors.forEach((selector) => selectors.add(selector));
 				return { code, map: null };
 			}
 		},
@@ -68,7 +67,7 @@ export function purgeCss(options?: PurgeOptions): Plugin {
 			for (const fileName in bundle) {
 				const chunkOrAsset = bundle[fileName];
 				if (chunkOrAsset.type === "chunk" && EXT_JS.test(fileName)) {
-					const classes = extractSelectorsWithRegex(chunkOrAsset.code);
+					const classes = extractSelectorsFromJS(chunkOrAsset.code);
 					classes.forEach((selector) => selectors.add(selector));
 				} else {
 					cssBundles[fileName] = chunkOrAsset;
