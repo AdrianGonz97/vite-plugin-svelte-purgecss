@@ -1,6 +1,6 @@
 import { parse, walk } from "svelte/compiler";
 import { Node, NodeClassAttribute, ParentNode, Selector } from "../types";
-import { CLASS_SELECTOR } from "../constants";
+import { CLASS_SELECTOR, ATTRIBUTES } from "../constants";
 
 export function extractSelectorsFromSvelte(
 	template: string,
@@ -65,7 +65,7 @@ export function extractSelectorsFromSvelte(
 				});
 			}
 
-			if (node.type === "Attribute") {
+			if (node.type === "Attribute" && !ATTRIBUTES.includes(node.name)) {
 				// <div data-menu="features" />
 				selectors.set(node.name, { type: node.type });
 
