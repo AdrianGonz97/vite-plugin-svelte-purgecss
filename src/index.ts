@@ -10,7 +10,7 @@ import {
 	extractSelectorsFromHtml,
 	extractSelectorsFromJS,
 	extractSelectorsFromSvelte,
-} from "./extract-selectors";
+} from "./extractors";
 import type { StringRegExpArray, ComplexSafelist } from "purgecss";
 
 type PurgeOptions = {
