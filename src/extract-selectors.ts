@@ -1,6 +1,7 @@
 import { parse, walk } from "svelte/compiler";
 import { Node, NodeClassAttribute, ParentNode, Selector } from "./types";
 import { Parser } from "htmlparser2";
+import { parse as parse_js } from "acorn";
 import { ATTRIBUTES, CLASS_SELECTOR } from "./constants";
 
 export function extractSelectorsFromHtml(code: string): string[] {
@@ -48,6 +49,34 @@ export function extractSelectorsFromHtml(code: string): string[] {
 	});
 
 	return [...formattedIds, ...formattedClasses];
+}
+
+export function extractSelectorsFromJS(code: string): string[] {
+	const selectors = new Set<string>();
+
+	parse_js(code, {
+		ecmaVersion: "latest",
+		sourceType: "module",
+		onToken: (token) => {
+			if (token.type.label === "string") {
+				const value = token.value as string;
+				const classes = value.split(" ");
+				classes.forEach(
+					(selector) =>
+						/[\w\-:./![\]]+(?<!:)/.test(selector) && selectors.add(selector)
+				);
+			}
+		},
+	});
+
+	const formattedClasses = Array.from(selectors).map((selector) => {
+		if (selector[0] === ".") {
+			return selector;
+		}
+		return "." + selector;
+	});
+
+	return formattedClasses;
 }
 
 export function extractSelectorsWithRegex(code: string): string[] {
