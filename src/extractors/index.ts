@@ -1,6 +1,6 @@
-export * from "./html-extractor";
-export * from "./svelte-extractor";
-export * from "./js-extractor";
+export * from './html-extractor';
+export * from './svelte-extractor';
+export * from './js-extractor';
 
 export function extractSelectorsWithRegex(code: string): string[] {
 	const classes = new Set<string>();
@@ -12,9 +12,9 @@ export function extractSelectorsWithRegex(code: string): string[] {
 
 	// adds a dot to the beginning of each class
 	return Array.from(classes).map((selector) => {
-		if (selector[0] === ".") {
+		if (selector[0] === '.') {
 			return selector;
 		}
-		return "." + selector;
+		return '.' + selector;
 	});
 }

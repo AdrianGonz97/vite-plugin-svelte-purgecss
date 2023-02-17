@@ -7,33 +7,31 @@ export type ExtractedSelectors = [string, Selector][];
 export type Selector = SelectorMarkup | SelectorStyle | SelectorFromIdentifier;
 
 type SelectorMarkup = {
-	type: "Element" | "Attribute" | "Class";
+	type: 'Element' | 'Attribute' | 'Class';
 };
 
 type SelectorStyle = {
-	type: "PseudoClassSelector";
-	name: "global" | string;
+	type: 'PseudoClassSelector';
+	name: 'global' | string;
 };
 
 type SelectorFromIdentifier = {
-	type: "FromIdentifier";
+	type: 'FromIdentifier';
 };
 
 // Attributes
-export type NodeClassAttribute =
-	| NodeClassAttributeMustacheTag
-	| NodeClassAttributeText;
+export type NodeClassAttribute = NodeClassAttributeMustacheTag | NodeClassAttributeText;
 
 type NodeClassAttributeMustacheTag = {
-	type: "MustacheTag";
+	type: 'MustacheTag';
 	expression?: {
-		type: "Identifier";
+		type: 'Identifier';
 		name: string;
 	};
 };
 
 type NodeClassAttributeText = {
-	type: "Text";
+	type: 'Text';
 	data: string;
 };
 
@@ -42,19 +40,19 @@ export type ParentNode = NodeIdentifierLiteral | NodeIdentifierCallExpression;
 
 type NodeIdentifierLiteral = {
 	init?: {
-		type: "Literal";
+		type: 'Literal';
 		value: string;
 	};
 };
 
 type NodeIdentifierCallExpression = {
 	init?: {
-		type: "CallExpression";
+		type: 'CallExpression';
 		callee?: {
 			object?: {
 				elements?: Array<
-					| { type: "Literal"; value: string }
-					| { type: "LogicalExpression"; right?: { value: string } }
+					| { type: 'Literal'; value: string }
+					| { type: 'LogicalExpression'; right?: { value: string } }
 				>;
 			};
 		};
@@ -72,38 +70,38 @@ export type Node =
 	| NodeTemplateElement;
 
 type NodeIdentifier = {
-	type: "Identifier";
+	type: 'Identifier';
 	name: string;
 };
 
 type NodeElement = {
-	type: "Element";
+	type: 'Element';
 	name: string;
 };
 
 type NodeAttribute = {
-	type: "Attribute";
+	type: 'Attribute';
 	name: string;
 	value?: NodeClassAttribute[];
 };
 
 type NodeClass = {
-	type: "Class";
+	type: 'Class';
 	name: string;
 };
 
 type NodePseudoClassSelector = {
-	type: "PseudoClassSelector";
-	name: "global" | string;
+	type: 'PseudoClassSelector';
+	name: 'global' | string;
 	children: [child?: { value: string }];
 };
 
 type NodeLiteral = {
-	type: "Literal";
+	type: 'Literal';
 	value: string;
 };
 
 type NodeTemplateElement = {
-	type: "TemplateElement";
+	type: 'TemplateElement';
 	value: { raw: string };
 };
