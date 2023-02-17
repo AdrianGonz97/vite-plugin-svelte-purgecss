@@ -21,7 +21,8 @@
 		"dev": "tsup --watch",
 		"build": "tsup",
 		"lint": "tsc",
-		"release": "pnpm run build && changeset publish"
+		"release": "pnpm run build && changeset publish",
+		"format": "prettier --write \"./src/**/*.{ts,svelte}\""
 	},
 	"keywords": [
 		"purgeCSS",
