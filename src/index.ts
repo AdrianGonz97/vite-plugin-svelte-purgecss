@@ -1,5 +1,4 @@
 import sveltePreprocess from 'svelte-preprocess';
-import type { typescript as TS, postcss as PostCSS } from 'svelte-preprocess';
 import { preprocess } from 'svelte/compiler';
 import { PurgeCSS } from 'purgecss';
 import { readFile } from 'fs/promises';
@@ -12,6 +11,7 @@ import {
 } from './extractors';
 import type { StringRegExpArray, ComplexSafelist } from 'purgecss';
 import type { ResolvedConfig, Plugin } from 'vite';
+import type { typescript as TS, postcss as PostCSS } from 'svelte-preprocess';
 
 type PurgeOptions = {
 	safelist?: ComplexSafelist;
