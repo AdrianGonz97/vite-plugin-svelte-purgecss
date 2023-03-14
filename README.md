@@ -51,6 +51,9 @@ const config: UserConfig = {
 
 For further configuration, you can learn more about safelisting [here](https://purgecss.com/configuration.html).
 
+## Caveats
+This package is still very **experimental**. If you're using an additional svelte preprocessor, such as [`mdsvex`](https://github.com/pngwn/mdsvex), you may experience issues with CSS classes being unintentionally purged. In the case of `mdsvex`, classes that live in `.svx` files will have to be manually safelisted to avoid being purged.
+
 ## Credits
 
 Foundationally based from [carbon-preprocess-svelte](https://github.com/carbon-design-system/carbon-preprocess-svelte) for the preprocessing of svelte components. We've added further logic to include selectors that may live in JS/TS files as well.
