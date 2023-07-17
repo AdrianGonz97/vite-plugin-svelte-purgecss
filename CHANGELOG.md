@@ -1,5 +1,11 @@
 # vite-plugin-svelte-purgecss
 
+## 0.1.1
+
+### Patch Changes
+
+- dbca34c: Fixed README
+
 ## 0.1.0
 
 ### Minor Changes
