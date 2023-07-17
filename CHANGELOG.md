@@ -1,5 +1,11 @@
 # vite-plugin-svelte-purgecss
 
+## 0.1.0
+
+### Minor Changes
+
+- 48cc086: Overhauled the extractors and simplified it down to just use Tailwind's default extractor
+
 ## 0.0.3
 
 ### Patch Changes
