@@ -12,7 +12,8 @@ PurgeCSS is an excellent package that removes unused CSS. Their provided plugins
 Ideally, we'd like to only keep the selectors that are used in your project. We accomplish by extracting out any of the possible selectors from your source files, followed by the extraction of potential selectors from the emitted JS chunks from rollup. From there, we can pass along the selectors to PurgeCSS for final processing.
 
 ## ⚠ Caveats ⚠
-This package is still very **experimental**. If you're using an additional svelte preprocessor, such as [`mdsvex`](https://github.com/pngwn/mdsvex), you may experience issues with CSS classes being unintentionally purged. In the case of `mdsvex`, classes that live in `.svx` files will have to be manually safelisted to avoid being purged.
+
+This package is still very **experimental**. Breaking changes can occur at any time. We'll stabilize once we hit a `1.0.0` release.
 
 ## Usage
 
@@ -53,7 +54,3 @@ const config: UserConfig = {
 ```
 
 For further configuration, you can learn more about safelisting [here](https://purgecss.com/configuration.html).
-
-## Caveats
-
-This package is still very **experimental**. Breaking changes can occur at any time. We'll stabilize once we hit a `1.0.0` release.
