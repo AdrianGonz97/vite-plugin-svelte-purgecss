@@ -75,7 +75,7 @@ You can also safelist selectors directly in the declaration block as well:
 
 ```css
 h3 {
-	/* purgecss ignore current */
+	/*! purgecss ignore current */
 	color: pink;
 }
 ```
