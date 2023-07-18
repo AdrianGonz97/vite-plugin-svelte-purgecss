@@ -1,12 +1,15 @@
-import { PurgeCSS, type StringRegExpArray, type UserDefinedOptions } from 'purgecss';
+import { PurgeCSS } from 'purgecss';
 import { defaultExtractor } from './extractors/default-extractor';
 import { walk } from 'estree-walker';
 import { join } from 'path';
 import type { ResolvedConfig, Plugin } from 'vite';
+import type { ComplexSafelist, StringRegExpArray, UserDefinedOptions } from 'purgecss';
 
 type Extractor = (content: string) => string[];
 
-type Options = Partial<UserDefinedOptions>;
+type Options = Partial<UserDefinedOptions> & {
+	safelist?: ComplexSafelist;
+};
 
 const EXT_CSS = /\.(css)$/;
 
@@ -19,7 +22,7 @@ export function purgeCss(purgeOptions?: Options): Plugin {
 		'body',
 		/aria-current/,
 		/svelte-/,
-		...(Array.isArray(purgeOptions?.safelist) ? [] : purgeOptions?.safelist?.standard ?? []),
+		...(purgeOptions?.safelist?.standard ?? []),
 	];
 	const extractor = (purgeOptions?.defaultExtractor as Extractor) ?? defaultExtractor();
 	const moduleIds = new Set<string>();
@@ -86,7 +89,7 @@ export function purgeCss(purgeOptions?: Options): Plugin {
 					safelist: {
 						...purgeOptions?.safelist,
 						standard: [...standard, ...selectorsArr],
-						greedy: [/svelte-/],
+						greedy: [/svelte-/, ...(purgeOptions?.safelist?.greedy ?? [])],
 					},
 				});
 
