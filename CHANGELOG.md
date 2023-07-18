@@ -1,5 +1,11 @@
 # vite-plugin-svelte-purgecss
 
+## 0.2.2
+
+### Patch Changes
+
+- 35b93c8: Fixed types for purge options
+
 ## 0.2.1
 
 ### Patch Changes
