@@ -1,5 +1,11 @@
 # vite-plugin-svelte-purgecss
 
+## 0.2.3
+
+### Patch Changes
+
+- 376491b: All purge options are now extendable
+
 ## 0.2.2
 
 ### Patch Changes
