@@ -1,6 +1,8 @@
 import { PurgeCSS, type StringRegExpArray, type UserDefinedOptions } from 'purgecss';
 import { defaultExtractor } from './extractors/default-extractor';
-import type { Plugin } from 'vite';
+import { walk } from 'estree-walker';
+import { join } from 'path';
+import type { ResolvedConfig, Plugin } from 'vite';
 
 type Extractor = (content: string) => string[];
 
@@ -13,33 +15,58 @@ type Options = UserDefinedOptions & {
 const EXT_CSS = /\.(css)$/;
 
 export function purgeCss(purgeOptions?: Options): Plugin {
+	let viteConfig: ResolvedConfig;
 	const selectors = new Set<string>();
 	const standard: StringRegExpArray = [
 		'*',
 		'html',
 		'body',
 		/aria-current/,
-		/^svelte-/,
+		/svelte-/,
 		...(purgeOptions?.safelist?.standard ?? []),
 	];
 	const extractor = (purgeOptions?.defaultExtractor as Extractor) ?? defaultExtractor();
+	const moduleIds = new Set<string>();
 
 	return {
 		name: 'vite-plugin-svelte-purgecss',
 		apply: 'build',
 		enforce: 'post',
 
-		async transform(code, id) {
-			if (EXT_CSS.test(id)) return { code, map: null };
+		load(id) {
+			if (EXT_CSS.test(id)) return;
+			moduleIds.add(id);
+		},
 
-			extractor(code).forEach((selector) => selectors.add(selector));
-			return { code, map: null };
+		configResolved(config) {
+			viteConfig = config;
 		},
 
 		async generateBundle(options, bundle) {
 			type ChunkOrAsset = (typeof bundle)[string];
 			type Asset = Extract<ChunkOrAsset, { type: 'asset' }>;
 			const assets: Record<string, Asset> = {};
+
+			for (const id of moduleIds) {
+				const info = this.getModuleInfo(id);
+				if (info?.isIncluded !== true || info.code === null) continue;
+
+				console.log(id);
+
+				const ast = this.parse(info.code);
+
+				// @ts-expect-error mismatched node types
+				walk(ast, {
+					enter(node, parent, key, index) {
+						if (node.type === 'Literal' && typeof node.value === 'string') {
+							extractor(node.value).forEach((selector) => selectors.add(selector));
+						}
+						if (node.type === 'Identifier') {
+							extractor(node.name).forEach((selector) => selectors.add(selector));
+						}
+					},
+				});
+			}
 
 			for (const [fileName, chunkOrAsset] of Object.entries(bundle)) {
 				if (chunkOrAsset.type === 'asset' && EXT_CSS.test(fileName)) {
@@ -52,19 +79,28 @@ export function purgeCss(purgeOptions?: Options): Plugin {
 			for (const [fileName, asset] of Object.entries(assets)) {
 				const purgeCSSResult = await new PurgeCSS().purge({
 					...purgeOptions,
-					content: [{ raw: '', extension: 'html' }],
-					css: [{ raw: asset.source as string, name: fileName }],
+					content: [join(viteConfig.root, '**/*.html')],
+					css: [{ raw: (asset.source as string).trim(), name: fileName }],
 					keyframes: true,
 					fontFace: true,
+					rejected: true,
+					rejectedCss: true,
+					variables: true,
 					safelist: {
 						...purgeOptions?.safelist,
 						standard: [...standard, ...selectorsArr],
+						greedy: [/svelte-/],
 					},
 				});
 
 				if (purgeCSSResult[0]) {
+					// prevent the original from being written
+					delete bundle[asset.fileName];
+
+					// emit the newly purged css file
 					this.emitFile({
 						...asset,
+						type: 'asset',
 						source: purgeCSSResult[0].css,
 					});
 				}
