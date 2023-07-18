@@ -1,5 +1,11 @@
 # vite-plugin-svelte-purgecss
 
+## 0.2.6
+
+### Patch Changes
+
+- a2ee4bd: Updated README to notify that this package has been moved to [`vite-plugin-tailwind-purge`](https://github.com/AdrianGonz97/vite-plugin-tailwind-purge)
+
 ## 0.2.5
 
 ### Patch Changes
