@@ -6,7 +6,7 @@ import type { ResolvedConfig, Plugin } from 'vite';
 
 type Extractor = (content: string) => string[];
 
-type Options = UserDefinedOptions;
+type Options = Partial<UserDefinedOptions>;
 
 const EXT_CSS = /\.(css)$/;
 
@@ -73,8 +73,11 @@ export function purgeCss(purgeOptions?: Options): Plugin {
 			for (const [fileName, asset] of Object.entries(assets)) {
 				const purgeCSSResult = await new PurgeCSS().purge({
 					...purgeOptions,
-					content: [join(viteConfig.root, '**/*.html')],
-					css: [{ raw: (asset.source as string).trim(), name: fileName }],
+					content: [join(viteConfig.root, '**/*.html'), ...(purgeOptions?.content ?? [])],
+					css: [
+						{ raw: (asset.source as string).trim(), name: fileName },
+						...(purgeOptions?.css ?? []),
+					],
 					keyframes: true,
 					fontFace: true,
 					rejected: true,
