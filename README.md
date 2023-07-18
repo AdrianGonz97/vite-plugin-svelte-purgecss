@@ -34,6 +34,8 @@ const config: UserConfig = {
 };
 ```
 
+### Safelisting
+
 If selectors that shouldn't be purged are being removed, simply add them to the `safelist`.
 
 ```ts
