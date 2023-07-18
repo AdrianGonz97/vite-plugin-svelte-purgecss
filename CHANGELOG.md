@@ -1,5 +1,11 @@
 # vite-plugin-svelte-purgecss
 
+## 0.1.2
+
+### Patch Changes
+
+- 0cc5c82: Removed redundant reading of source files
+
 ## 0.1.1
 
 ### Patch Changes
