@@ -6,11 +6,7 @@ import type { ResolvedConfig, Plugin } from 'vite';
 
 type Extractor = (content: string) => string[];
 
-type Options = UserDefinedOptions & {
-	safelist: {
-		standard: StringRegExpArray;
-	};
-};
+type Options = UserDefinedOptions;
 
 const EXT_CSS = /\.(css)$/;
 
@@ -23,7 +19,7 @@ export function purgeCss(purgeOptions?: Options): Plugin {
 		'body',
 		/aria-current/,
 		/svelte-/,
-		...(purgeOptions?.safelist?.standard ?? []),
+		...(Array.isArray(purgeOptions?.safelist) ? [] : purgeOptions?.safelist?.standard ?? []),
 	];
 	const extractor = (purgeOptions?.defaultExtractor as Extractor) ?? defaultExtractor();
 	const moduleIds = new Set<string>();
