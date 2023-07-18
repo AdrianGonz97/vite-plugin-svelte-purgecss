@@ -53,4 +53,29 @@ const config: UserConfig = {
 };
 ```
 
-For further configuration, you can learn more about safelisting [here](https://purgecss.com/configuration.html).
+Alternatively, if you'd like to safelist selectors directly in your stylesheets, you can do so by adding special comments:
+
+```css
+/*! purgecss start ignore */
+
+h1 {
+	color: red;
+}
+
+h2 {
+	color: blue;
+}
+
+/*! purgecss end ignore */
+```
+
+You can also safelist selectors directly in the declaration block as well:
+
+```css
+h3 {
+	/* purgecss ignore current */
+	color: pink;
+}
+```
+
+For further configuration, you can learn more [here](https://purgecss.com/configuration.html).

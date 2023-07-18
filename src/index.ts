@@ -10,10 +10,11 @@ type Extractor = (content: string) => string[];
 type Options = Partial<UserDefinedOptions> & {
 	safelist?: ComplexSafelist;
 };
+type PurgeOptions = Omit<Options, 'css'>;
 
 const EXT_CSS = /\.(css)$/;
 
-export function purgeCss(purgeOptions?: Options): Plugin {
+export function purgeCss(purgeOptions?: PurgeOptions): Plugin {
 	let viteConfig: ResolvedConfig;
 	const selectors = new Set<string>();
 	const standard: StringRegExpArray = [
@@ -77,10 +78,7 @@ export function purgeCss(purgeOptions?: Options): Plugin {
 				const purgeCSSResult = await new PurgeCSS().purge({
 					...purgeOptions,
 					content: [join(viteConfig.root, '**/*.html'), ...(purgeOptions?.content ?? [])],
-					css: [
-						{ raw: (asset.source as string).trim(), name: fileName },
-						...(purgeOptions?.css ?? []),
-					],
+					css: [{ raw: (asset.source as string).trim(), name: fileName }],
 					keyframes: true,
 					fontFace: true,
 					rejected: true,
