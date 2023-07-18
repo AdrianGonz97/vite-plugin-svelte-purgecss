@@ -1,5 +1,11 @@
 # vite-plugin-svelte-purgecss
 
+## 0.2.0
+
+### Minor Changes
+
+- 2a87412: Parses and walks the ASTs of the generated chunks, only extracting selectors for string literals and identifiers.
+
 ## 0.1.2
 
 ### Patch Changes
