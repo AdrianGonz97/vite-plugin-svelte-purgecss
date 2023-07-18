@@ -1,4 +1,3 @@
-import { readFile } from 'fs/promises';
 import { PurgeCSS, type StringRegExpArray, type UserDefinedOptions } from 'purgecss';
 import { defaultExtractor } from './extractors/default-extractor';
 import type { Plugin } from 'vite';
@@ -11,8 +10,7 @@ type Options = UserDefinedOptions & {
 	};
 };
 
-export const EXT_CSS = /\.(css)$/;
-export const EXT_JS = /\.(js)$/;
+const EXT_CSS = /\.(css)$/;
 
 export function purgeCss(purgeOptions?: Options): Plugin {
 	const selectors = new Set<string>();
@@ -32,11 +30,9 @@ export function purgeCss(purgeOptions?: Options): Plugin {
 		enforce: 'post',
 
 		async transform(code, id) {
-			const source = await readFile(id, 'utf-8').catch(() => null);
-			if (!source) return { code, map: null };
+			if (EXT_CSS.test(id)) return { code, map: null };
 
-			extractor(source).forEach((selector) => selectors.add(selector));
-
+			extractor(code).forEach((selector) => selectors.add(selector));
 			return { code, map: null };
 		},
 
@@ -46,9 +42,7 @@ export function purgeCss(purgeOptions?: Options): Plugin {
 			const assets: Record<string, Asset> = {};
 
 			for (const [fileName, chunkOrAsset] of Object.entries(bundle)) {
-				if (chunkOrAsset.type === 'chunk' && EXT_JS.test(fileName)) {
-					extractor(chunkOrAsset.code).forEach((selector) => selectors.add(selector));
-				} else if (chunkOrAsset.type === 'asset' && EXT_CSS.test(fileName)) {
+				if (chunkOrAsset.type === 'asset' && EXT_CSS.test(fileName)) {
 					assets[fileName] = chunkOrAsset;
 				}
 			}
@@ -58,8 +52,8 @@ export function purgeCss(purgeOptions?: Options): Plugin {
 			for (const [fileName, asset] of Object.entries(assets)) {
 				const purgeCSSResult = await new PurgeCSS().purge({
 					...purgeOptions,
-					content: [{ raw: '', extension: 'css' }],
-					css: [{ raw: asset.source as string }],
+					content: [{ raw: '', extension: 'html' }],
+					css: [{ raw: asset.source as string, name: fileName }],
 					keyframes: true,
 					fontFace: true,
 					safelist: {
@@ -70,8 +64,7 @@ export function purgeCss(purgeOptions?: Options): Plugin {
 
 				if (purgeCSSResult[0]) {
 					this.emitFile({
-						type: 'asset',
-						fileName,
+						...asset,
 						source: purgeCSSResult[0].css,
 					});
 				}
