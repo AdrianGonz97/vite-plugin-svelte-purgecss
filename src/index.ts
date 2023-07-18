@@ -51,8 +51,6 @@ export function purgeCss(purgeOptions?: Options): Plugin {
 				const info = this.getModuleInfo(id);
 				if (info?.isIncluded !== true || info.code === null) continue;
 
-				console.log(id);
-
 				const ast = this.parse(info.code);
 
 				// @ts-expect-error mismatched node types
