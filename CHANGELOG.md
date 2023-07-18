@@ -1,5 +1,11 @@
 # vite-plugin-svelte-purgecss
 
+## 0.2.4
+
+### Patch Changes
+
+- 7c86cbf: `PurgeOptions` shouldn't allow `css` property to be modified
+
 ## 0.2.3
 
 ### Patch Changes
