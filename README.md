@@ -1,3 +1,8 @@
+# Notice!
+This package has been moved to [vite-plugin-tailwind-purge](https://github.com/AdrianGonz97/vite-plugin-tailwind-purge) as the internals have been refactored to be more generalized. Worry not though, Svelte will still be properly supported! 
+
+---
+
 # vite-plugin-svelte-purgecss
 
 [![npm version](https://img.shields.io/npm/v/vite-plugin-svelte-purgecss?logo=npm&color=cb3837)](https://www.npmjs.com/package/vite-plugin-svelte-purgecss)
