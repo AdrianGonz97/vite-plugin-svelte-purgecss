@@ -1,5 +1,11 @@
 # vite-plugin-svelte-purgecss
 
+## 0.2.5
+
+### Patch Changes
+
+- f1855f5: Added `estree-walker` to dependencies
+
 ## 0.2.4
 
 ### Patch Changes
