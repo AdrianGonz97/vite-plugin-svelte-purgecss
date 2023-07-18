@@ -1,5 +1,11 @@
 # vite-plugin-svelte-purgecss
 
+## 0.2.1
+
+### Patch Changes
+
+- d20431a: Removed leftover log
+
 ## 0.2.0
 
 ### Minor Changes
