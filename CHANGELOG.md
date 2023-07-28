@@ -1,5 +1,11 @@
 # vite-plugin-svelte-purgecss
 
+## 0.2.7
+
+### Patch Changes
+
+- d8d3914: fix: Extract selectors from template literals
+
 ## 0.2.6
 
 ### Patch Changes
